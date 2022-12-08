@@ -35,6 +35,7 @@ public class Main {
                         String leitura1 = "MAO";
                         Voo voo1 = new Voo(leitura, leitura1);
                         if (voo.size() == 0) {
+//                        	voo.add(voo1);
                             indice = 0;
                         } else {
                             for (int i = 0; i < voo.size(); i++) {
@@ -43,7 +44,8 @@ public class Main {
                                     break;
                                 } else {
                                     if (i + 1 == voo.size()) {
-                                        indice = i + 1;
+//                                    	voo.add(voo1);
+                                    	indice = i + 1;
                                         break;
                                     }
                                 }
@@ -64,7 +66,7 @@ public class Main {
                         int posicao = voo1.AddPassageiro(cl);
                         posicoes.add(posicao);
                         voo.add(voo1);
-                        System.out.println("\nnome: " + cl.getNome() + "\ncpf: " + cl.getCpf() + "\norigem: "
+                        System.out.println("voo " + voo.size() + "\nnome: " + cl.getNome() + "\ncpf: " + cl.getCpf() + "\norigem: "
                                 + leitura + " Destino " + leitura1 + "\n" +
                                 "Assento: " + voo1.getNumDeAssentos()[posicao].getGuadarassento()+ "\n"
                                 + "ID: " +voo1.IdAleatorio()+ "\nValor da passagem: " + voo1.getvalPassagem());
@@ -84,7 +86,8 @@ public class Main {
                         int leituraid = src.nextInt();
                         for (int i = 0; i < voo.size(); i++) {
                             if (leituraid ==voo.get(i).getId()) {
-
+                            	//excluir (case 4) 
+                            	//adicionar (cliente, assento)
                             }
                         }
                     }
@@ -116,44 +119,49 @@ public class Main {
                     System.out.println("2:nao");
                     int confirmar3 = src.nextInt();
                     if (confirmar3 == 1) {
-                        System.out.println("Coloque seu id");
-                        int id = src.nextInt();
+                        System.out.println("Coloque seu assento");
+                        int assento = src.nextInt();
+//                        System.out.println("posições " + posicoes.size());
                         for (int i = 0; i < voo.size(); i++) {
-                            if (id ==voo.get(i).getId()) {
-                                //voo.get(i).cancelaComprar();
-
-                                break;
-                            }
+                        	for(int posicao: posicoes) {
+                        		//voo.get(i).cancelaComprar();
+                            	voo.get(i).cancelaComprar(voo.get(i).getNumDeAssentos()[posicao], posicao);
+                            	posicoes.remove(posicoes.indexOf(posicao));
+                                break;	
+                        	}
                         }
                     }
 
                     break;
                 case 5:
-                    //try {
+                    try {
                         System.out.println("coloque sua senha: ");
                         String testesenha = src.next();
-                        if (testesenha.equals(senha)){//throw Execoes.SenhaInvalidaException,LocalInvalidoException
+                        if (testesenha.equals(senha)){ 
                             System.out.println("Digite sua origem");
                             String leitura2 = src.next();
                             leitura2 = leitura2.toUpperCase();
                             System.out.println("Digite sua Destino");
                             String leitura3 = src.next();
                             leitura3 = leitura3.toUpperCase();
+                            boolean vooExiste = false;
                             for (int i = 0; i < voo.size(); i++) {
                                 if (voo.get(i).getOrigem().equals(leitura2) && voo.get(i).getDestino().equals(leitura3)) {
                                     voo.get(i).ListarPassageiros();
+                                    vooExiste = true;
+                                    break;
                                 }
                             }
+                            if(!vooExiste) throw new Execoes.LocalInvalidoException();
                         }
-//                        else{
-//                            throw new Execoes.SenhaInvalidaException();
-//                            throw new Execoes.LocalInvalidoException();
-//                        }
-//                    }catch (SenhaInvalidaException e){
-//                        System.out.println("senha invalida");
-//                    }catch (LocalInvalidoException e){
-//                        System.out.println("Local invalido");
-//                    }
+                        else{
+                            throw new Execoes.SenhaInvalidaException();
+                        }
+                    }catch (SenhaInvalidaException e){
+                        System.out.println("senha invalida");
+                    }catch (LocalInvalidoException e){
+                        System.out.println("Local invalido");
+                    }
                     break;
                 case 6:
                     break;
