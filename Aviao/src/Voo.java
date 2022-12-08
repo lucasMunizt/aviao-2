@@ -9,7 +9,7 @@ public  class  Voo {
     private ArrayList<Integer> assentosOcupados;
     //private int AssentosOcupados;
     private Assento NumDeAssentos[] = new Assento[220];
-    private double valPassagem;
+    private double valPassagem = 0;
     private Passagem passagem;
     private  int id;
     private int assento;
@@ -30,31 +30,43 @@ public  class  Voo {
     public  int AddPassageiro( Cliente p) throws Execoes.AviaoLotadoException {
         int lugar = this.AssentoAleatorio();
         if(lugar<this.NumDeAssentos.length && lugar>=0){
-            if (NumDeAssentos[lugar]==null){
-                Assento a = new Assento();
-                a.setPassageiros(p);
-                this.NumDeAssentos[lugar]=a;
-                numPassageiros++;
-                NumDeAssentos[lugar].setValor(ValordaPassgem());
-                return setAssento(lugar,AssentoAleatorio());
-            }else{
-                while(NumDeAssentos[lugar] != null){
+        	if (NumDeAssentos[lugar]!=null){
+            	while(NumDeAssentos[lugar] != null){
                     lugar++;
                 }
-                Assento a = new Assento();
-                a.setPassageiros(p);
-                this.NumDeAssentos[lugar]=a;
-                numPassageiros++;
-                return setAssento(lugar,AssentoAleatorio());
             }
+            Assento a = new Assento();
+            a.setPassageiros(p);
+            this.NumDeAssentos[lugar]=a;
+            numPassageiros++;
+            NumDeAssentos[lugar].setValor(ValordaPassgem());
+            return setAssento(lugar,AssentoAleatorio());
+        }else {
+            throw new Execoes.AviaoLotadoException();
+        }
+    }
+    public int AddPassageiro( Cliente p, int assento) throws Execoes.AviaoLotadoException {
+    	int lugar = this.AssentoAleatorio();
+    	if(lugar<this.NumDeAssentos.length && lugar>=0){
+            if (NumDeAssentos[lugar]!=null){
+            	while(NumDeAssentos[lugar] != null){
+                    lugar++;
+                }
+            }
+            Assento a = new Assento();
+            a.setPassageiros(p);
+            this.NumDeAssentos[lugar]=a;
+            numPassageiros++;
+            NumDeAssentos[lugar].setValor(ValordaPassgem());
+            return setAssento(lugar,assento);
         }else {
             throw new Execoes.AviaoLotadoException();
         }
     }
     public double ValordaPassgem(){
-       valPassagem = (100+Math.pow( 5,Math.log10(numPassageiros)));
-        System.out.println(numPassageiros);
+    	valPassagem = (100+Math.pow( 5,Math.log10(numPassageiros)));
         valorTotal+=valPassagem;
+        System.out.println("n passageiros " + numPassageiros + "\n valor " + valPassagem + "\n valor total " + valorTotal);
         return valPassagem;
     }
     public  void  ListarPassageiros (){
@@ -64,12 +76,13 @@ public  class  Voo {
                         getPassageiros (). getCpf () + "\nAssento " +NumDeAssentos[i].getGuadarassento()+ "\nID: " + getId() +"\nvalor total:" +valorTotal);
         }
     }
-    public void cancelaComprar(Assento assento){
-    valorTotal-= getvalPassagem();
-    System.out.println(assentosOcupados);
-    assentosOcupados.remove(assentosOcupados.indexOf(assento.getGuadarassento()));
-    NumDeAssentos=null;
-    numPassageiros--;
+    public void cancelaComprar(Assento assento, int posicao){
+	    valorTotal-= assento.getValor();
+//	    if(assentosOcupados.contains(assento.getGuadarassento())) {
+//	    	assentosOcupados.remove(assentosOcupados.indexOf(assento.getGuadarassento()));
+//	    }
+	    NumDeAssentos[posicao] = null;
+	    numPassageiros--;
     }
     public int IdAleatorio(){
         Random aleatorio = new Random();
